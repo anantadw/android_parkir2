@@ -1,9 +1,14 @@
 package com.example.aplikasiparkirpayment;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -156,12 +161,53 @@ public class TransactionOutActivity extends AppCompatActivity {
         }
     }
 
+    // BLUETOOTH PRINTER
+    public static final int PERMISSION_BLUETOOTH = 1;
+    public static final int PERMISSION_BLUETOOTH_ADMIN = 2;
+    public static final int PERMISSION_BLUETOOTH_CONNECT = 3;
+    public static final int PERMISSION_BLUETOOTH_SCAN = 4;
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            switch (requestCode) {
+                case TransactionOutActivity.PERMISSION_BLUETOOTH:
+                case TransactionOutActivity.PERMISSION_BLUETOOTH_ADMIN:
+                case TransactionOutActivity.PERMISSION_BLUETOOTH_CONNECT:
+                case TransactionOutActivity.PERMISSION_BLUETOOTH_SCAN:
+                    try {
+                        this.printBill();
+                    } catch (EscPosConnectionException e) {
+                        e.printStackTrace();
+                    } catch (EscPosParserException e) {
+                        e.printStackTrace();
+                    } catch (EscPosEncodingException e) {
+                        e.printStackTrace();
+                    } catch (EscPosBarcodeException e) {
+                        e.printStackTrace();
+                    }
+            }
+        }
+    }
+
     private void printBill() throws EscPosConnectionException, EscPosParserException, EscPosEncodingException, EscPosBarcodeException {
-        EscPosPrinter printer = new EscPosPrinter(BluetoothPrintersConnections.selectFirstPaired(), 203, 58f, 15);
-        printer.printFormattedText(
-                "[L]===============\n" +
-                "[C] Struk  Parkir \n" +
-                "[L]===============\n"
-        );
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH}, TransactionOutActivity.PERMISSION_BLUETOOTH);
+        } else if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADMIN) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH_ADMIN}, TransactionOutActivity.PERMISSION_BLUETOOTH_ADMIN);
+        } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S && ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH_CONNECT}, TransactionOutActivity.PERMISSION_BLUETOOTH_CONNECT);
+        } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S && ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH_SCAN}, TransactionOutActivity.PERMISSION_BLUETOOTH_SCAN);
+        } else {
+            EscPosPrinter printer = new EscPosPrinter(BluetoothPrintersConnections.selectFirstPaired(), 203, 58f, 15);
+            printer.printFormattedText(
+                    "[L]===============\n" +
+                    "[C] Struk  Parkir \n" +
+                    "[L]===============\n"
+            );
+        }
     }
 }
