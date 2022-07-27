@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/AndroidStudio/AplikasiParkir/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2712820512820513" />
+        <entry key="..\:/AndroidStudio/AplikasiParkir/app/src/main/res/drawable/custom_edittext.xml" value="0.2712820512820513" />
+        <entry key="..\:/AndroidStudio/AplikasiParkir/app/src/main/res/drawable/ic_baseline_account_circle_24.xml" value="0.2712820512820513" />
+        <entry key="..\:/AndroidStudio/AplikasiParkir/app/src/main/res/drawable/ic_baseline_account_circle_focused_24.xml" value="0.2712820512820513" />
+        <entry key="..\:/AndroidStudio/AplikasiParkir/app/src/main/res/drawable/ic_baseline_directions_bike_24.xml" value="0.2712820512820513" />
+        <entry key="..\:/AndroidStudio/AplikasiParkir/app/src/main/res/drawable/ic_baseline_directions_car_24.xml" value="0.2712820512820513" />
+        <entry key="..\:/AndroidStudio/AplikasiParkir/app/src/main/res/drawable/ic_baseline_focused_24.xml" value="0.2712820512820513" />
+        <entry key="..\:/AndroidStudio/AplikasiParkir/app/src/main/res/drawable/ic_baseline_lock_24.xml" value="0.2712820512820513" />
+        <entry key="..\:/AndroidStudio/AplikasiParkir/app/src/main/res/drawable/ic_baseline_login_24.xml" value="0.15" />
+        <entry key="..\:/AndroidStudio/AplikasiParkir/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2712820512820513" />
+        <entry key="..\:/AndroidStudio/AplikasiParkir/app/src/main/res/drawable/tab_color.xml" value="0.2712820512820513" />
+        <entry key="..\:/AndroidStudio/AplikasiParkir/app/src/main/res/layout/activity_home.xml" value="0.259375" />
+        <entry key="..\:/AndroidStudio/AplikasiParkir/app/src/main/res/layout/activity_login.xml" value="0.25407608695652173" />
+        <entry key="..\:/AndroidStudio/AplikasiParkir/app/src/main/res/layout/activity_transaction_in.xml" value="0.24230072463768115" />
+        <entry key="..\:/AndroidStudio/AplikasiParkir/app/src/main/res/layout/activity_transaction_list.xml" value="0.24230072463768115" />
+        <entry key="..\:/AndroidStudio/AplikasiParkir/app/src/main/res/layout/activity_transaction_out.xml" value="0.264" />
+        <entry key="..\:/AndroidStudio/AplikasiParkir/app/src/main/res/layout/appbar.xml" value="0.264" />
+        <entry key="..\:/AndroidStudio/AplikasiParkir/app/src/main/res/layout/fragment_car.xml" value="0.2563405797101449" />
+        <entry key="..\:/AndroidStudio/AplikasiParkir/app/src/main/res/layout/fragment_motorcycle.xml" value="0.2563405797101449" />
+        <entry key="..\:/AndroidStudio/AplikasiParkir/app/src/main/res/layout/list_item.xml" value="0.24230072463768115" />
+        <entry key="..\:/AndroidStudio/AplikasiParkir/app/src/main/res/layout/loading_dialog.xml" value="0.24230072463768115" />
+        <entry key="..\:/AndroidStudio/AplikasiParkir/app/src/main/res/layout/splash_screen.xml" value="0.25407608695652173" />
+        <entry key="..\:/AndroidStudio/AplikasiParkir/app/src/main/res/layout/toolbar.xml" value="0.264" />
+        <entry key="..\:/AndroidStudio/AplikasiParkir/app/src/main/res/menu/bottom_navigation.xml" value="0.259375" />
+        <entry key="..\:/AndroidStudio/AplikasiParkir/app/src/main/res/menu/toolbar_menu.xml" value="0.259375" />
+        <entry key="..\:/AndroidStudio/AplikasiParkir/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2712820512820513" />
+        <entry key="..\:/AndroidStudio/AplikasiParkir/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.2712820512820513" />
+        <entry key="..\:/AndroidStudio/Lain/AplikasiParkir/app/src/main/res/layout/activity_transaction_out.xml" value="0.3625" />
+        <entry key="..\:/AndroidStudio/Lain/AplikasiParkirPayment/app/src/main/res/layout/activity_transaction_in.xml" value="0.3625" />
+        <entry key="..\:/AndroidStudio/Lain/AplikasiParkirPayment/app/src/main/res/layout/activity_transaction_out.xml" value="0.3625" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
