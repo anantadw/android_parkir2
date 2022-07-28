@@ -2,10 +2,7 @@ package com.example.aplikasiparkirpayment;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -19,7 +16,7 @@ public class SplashScreen extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                // Check if use has token (logged in)
+                // Check if user has token (logged in)
                 String token = Preferences.getToken(getBaseContext());
                 if (token != null) {
                     Intent intent = new Intent(getBaseContext(), HomeActivity.class);

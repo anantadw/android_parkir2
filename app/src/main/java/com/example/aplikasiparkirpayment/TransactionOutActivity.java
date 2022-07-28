@@ -1,15 +1,18 @@
 package com.example.aplikasiparkirpayment;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -39,6 +42,8 @@ public class TransactionOutActivity extends AppCompatActivity {
     TextView tv_vehicle, tv_transaction_id, tv_license_plate, tv_date, tv_time_in, tv_cost;
     Button btn_done;
     private int price;
+    BluetoothAdapter bluetoothAdapter;
+    public static final int BLUETOOTH_REQ_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +59,7 @@ public class TransactionOutActivity extends AppCompatActivity {
         tv_time_in = findViewById(R.id.tvTimeIn);
         tv_cost = findViewById(R.id.tvCost);
         btn_done = findViewById(R.id.btnDone);
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         Intent intentData = getIntent();
         int transaction_id = intentData.getIntExtra("transaction_id", 0);
@@ -74,9 +80,29 @@ public class TransactionOutActivity extends AppCompatActivity {
         btn_done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                markDone(transaction_id);
+                if (bluetoothAdapter == null) {
+                    Toast.makeText(getApplicationContext(), "Perangkat tidak mendukung Bluetooth.", Toast.LENGTH_SHORT).show();
+                }
+
+                if (!bluetoothAdapter.isEnabled()) {
+                    Intent bluetoothIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    startActivityForResult(bluetoothIntent, BLUETOOTH_REQ_CODE);
+                } else {
+                    finishTransaction(transaction_id);
+                }
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            Toast.makeText(getApplicationContext(), "Bluetooth dinyalakan.", Toast.LENGTH_SHORT).show();
+        } else if (resultCode == RESULT_CANCELED) {
+            Toast.makeText(getApplicationContext(), "Bluetooth perlu dinyalakan untuk mencetak struk.", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void getDetailTransactionData(int transaction_id) {
@@ -118,7 +144,7 @@ public class TransactionOutActivity extends AppCompatActivity {
         }
     }
 
-    private void markDone(int transaction_id) {
+    private void finishTransaction(int transaction_id) {
         TransactionUpdate transactionUpdate = new TransactionUpdate();
         transactionUpdate.setTotal_price(price);
 
@@ -130,24 +156,34 @@ public class TransactionOutActivity extends AppCompatActivity {
                 public void onResponse(Call<DefaultResponse> call, Response<DefaultResponse> response) {
                     if (response.isSuccessful()) {
                         loadingDialog.dismissDialog();
-                        Toast.makeText(getApplicationContext(), "Berhasil. Data diubah.", Toast.LENGTH_LONG).show();
-                        try {
-                            printBill();
-                        } catch (EscPosConnectionException e) {
-                            e.printStackTrace();
-                        } catch (EscPosParserException e) {
-                            e.printStackTrace();
-                        } catch (EscPosEncodingException e) {
-                            e.printStackTrace();
-                        } catch (EscPosBarcodeException e) {
-                            e.printStackTrace();
-                        }
+                        Toast.makeText(getApplicationContext(), "Transaksi berhasil. Mencetak struk.", Toast.LENGTH_LONG).show();
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    printBill();
+                                } catch (EscPosConnectionException e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(getApplicationContext(), "Error: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                                } catch (EscPosParserException e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(getApplicationContext(), "Error: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                                } catch (EscPosEncodingException e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(getApplicationContext(), "Error: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                                } catch (EscPosBarcodeException e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(getApplicationContext(), "Error: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        }, 700);
 
                         finish();
                     } else {
                         if (response.code() == 400) {
                             loadingDialog.dismissDialog();
-                            Toast.makeText(getApplicationContext(), "Gagal. Data tidak diubah.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Transaksi gagal.", Toast.LENGTH_LONG).show();
                         }
                     }
                 }
@@ -178,15 +214,19 @@ public class TransactionOutActivity extends AppCompatActivity {
                 case TransactionOutActivity.PERMISSION_BLUETOOTH_CONNECT:
                 case TransactionOutActivity.PERMISSION_BLUETOOTH_SCAN:
                     try {
-                        this.printBill();
+                        printBill();
                     } catch (EscPosConnectionException e) {
                         e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), "Error: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                     } catch (EscPosParserException e) {
                         e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), "Error: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                     } catch (EscPosEncodingException e) {
                         e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), "Error: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                     } catch (EscPosBarcodeException e) {
                         e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), "Error: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                     }
             }
         }
@@ -202,11 +242,11 @@ public class TransactionOutActivity extends AppCompatActivity {
         } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S && ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH_SCAN}, TransactionOutActivity.PERMISSION_BLUETOOTH_SCAN);
         } else {
-            EscPosPrinter printer = new EscPosPrinter(BluetoothPrintersConnections.selectFirstPaired(), 203, 58f, 15);
+            EscPosPrinter printer = new EscPosPrinter(BluetoothPrintersConnections.selectFirstPaired(), 203, 58f, 32);
             printer.printFormattedText(
-                    "[L]===============\n" +
-                    "[C] Struk  Parkir \n" +
-                    "[L]===============\n"
+                    "[L]================================\n" +
+                    "[C]Struk Parkir\n" +
+                    "[L]================================\n"
             );
         }
     }
