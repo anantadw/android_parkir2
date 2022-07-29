@@ -8,12 +8,19 @@
     android:orientation="vertical"
     android:background="@color/darker_blue">
 
+    <ImageView
+        android:id="@+id/ivLogoApp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="80dp"
+        android:src="@drawable/logo_app_darker" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="E-Parkir\nDinas Perhubungan\nKota Bandung"
+        android:text="Aplikasi\nParkir Payment\nDishub Kota Bandung"
         android:textStyle="bold"
-        android:textSize="36sp"
+        android:textSize="30sp"
         android:textColor="#DCDCDC"
         android:layout_marginBottom="40dp"
         android:layout_marginLeft="30dp"
@@ -21,8 +28,9 @@
 
     <ImageView
         android:id="@+id/ivLogoDishub"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="150dp"
         android:src="@drawable/logo_dishub" />
 
 </LinearLayout>

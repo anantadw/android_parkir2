@@ -4,14 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".LoginActivity"
-    android:padding="50dp"
+    android:padding="30dp"
     android:orientation="vertical"
     android:gravity="center">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="E-Parkir DISHUB Kota Bandung"
+        android:text="E-Parkir Dishub\nKota Bandung"
         android:textAlignment="center"
         android:textSize="36sp"
         android:textColor="@color/dark_blue"
@@ -27,7 +27,7 @@
 
     <EditText
         android:id="@+id/etMemberNumber"
-        android:layout_width="200dp"
+        android:layout_width="250dp"
         android:layout_height="50dp"
         android:hint="Nomor anggota"
         android:layout_marginTop="60dp"
@@ -42,7 +42,7 @@
 
     <EditText
         android:id="@+id/etPassword"
-        android:layout_width="200dp"
+        android:layout_width="250dp"
         android:layout_height="50dp"
         android:hint="Kata sandi"
         android:layout_marginTop="20dp"
@@ -61,7 +61,6 @@
         android:text="Masuk"
         android:textStyle="bold"
         android:textSize="18dp"
-        android:textAllCaps="false"
         android:backgroundTint="@color/dark_blue"
         android:layout_marginTop="60dp"
         android:paddingTop="10dp"

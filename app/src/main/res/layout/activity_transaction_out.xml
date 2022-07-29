@@ -24,7 +24,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_below="@id/toolbar"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="60dp"
         android:tint="@color/black"
         android:layout_centerHorizontal="true"/>
 
@@ -42,7 +42,7 @@
         <TextView
             android:layout_columnWeight="1"
             android:layout_gravity="fill"
-            android:text="Nomor Transaksi"
+            android:text="ID Transaksi"
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -142,7 +142,7 @@
         android:layout_marginTop="40dp"
         android:layout_marginEnd="40dp"
         android:layout_marginBottom="40dp"
-        android:text="Pilih Pembayaran"
+        android:text="Bayar"
         android:textSize="24sp" />
 
 </RelativeLayout>
