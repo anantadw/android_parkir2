@@ -3,6 +3,7 @@ package com.example.aplikasiparkirpayment;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -39,7 +40,8 @@ import retrofit2.Response;
 public class TransactionOutActivity extends AppCompatActivity {
     Toolbar toolbar;
     LoadingDialog loadingDialog;
-    TextView tv_vehicle, tv_transaction_id, tv_license_plate, tv_date, tv_time_in, tv_cost;
+    AppCompatImageView iv_vehicle;
+    TextView tv_transaction_id, tv_license_plate, tv_date, tv_time_in, tv_cost;
     Button btn_done;
     private int price;
     BluetoothAdapter bluetoothAdapter;
@@ -52,7 +54,7 @@ public class TransactionOutActivity extends AppCompatActivity {
 
         loadingDialog = new LoadingDialog(TransactionOutActivity.this);
         toolbar = findViewById(R.id.toolbar);
-        tv_vehicle = findViewById(R.id.tvVehicle);
+        iv_vehicle = findViewById(R.id.ivVehicle);
         tv_transaction_id = findViewById(R.id.tvTransactionId);
         tv_license_plate = findViewById(R.id.tvLicensePlate);
         tv_date = findViewById(R.id.tvDate);
@@ -66,13 +68,14 @@ public class TransactionOutActivity extends AppCompatActivity {
         int vehicle_id = intentData.getIntExtra("vehicle_id", 0);
 
         if (vehicle_id == 1) {
-            tv_vehicle.setText("Mobil");
+            iv_vehicle.setImageResource(R.drawable.ic_baseline_directions_car_24);
         } else {
-            tv_vehicle.setText("Motor");
+            iv_vehicle.setImageResource(R.drawable.ic_baseline_directions_bike_24);
         }
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Transaksi Keluar");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         loadingDialog.startLoadingDialog();
         getDetailTransactionData(transaction_id);
@@ -92,6 +95,12 @@ public class TransactionOutActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 
     @Override
@@ -158,26 +167,21 @@ public class TransactionOutActivity extends AppCompatActivity {
                         loadingDialog.dismissDialog();
                         Toast.makeText(getApplicationContext(), "Transaksi berhasil. Mencetak struk.", Toast.LENGTH_LONG).show();
 
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    printBill();
-                                } catch (EscPosConnectionException e) {
-                                    e.printStackTrace();
-                                    Toast.makeText(getApplicationContext(), "Error: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-                                } catch (EscPosParserException e) {
-                                    e.printStackTrace();
-                                    Toast.makeText(getApplicationContext(), "Error: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-                                } catch (EscPosEncodingException e) {
-                                    e.printStackTrace();
-                                    Toast.makeText(getApplicationContext(), "Error: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-                                } catch (EscPosBarcodeException e) {
-                                    e.printStackTrace();
-                                    Toast.makeText(getApplicationContext(), "Error: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        }, 700);
+                        try {
+                            printBill();
+                        } catch (EscPosConnectionException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getApplicationContext(), "Error: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                        } catch (EscPosParserException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getApplicationContext(), "Error: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                        } catch (EscPosEncodingException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getApplicationContext(), "Error: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                        } catch (EscPosBarcodeException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getApplicationContext(), "Error: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                        }
 
                         finish();
                     } else {
@@ -248,6 +252,7 @@ public class TransactionOutActivity extends AppCompatActivity {
                     "[C]Struk Parkir\n" +
                     "[L]================================\n"
             );
+            printer.disconnectPrinter();
         }
     }
 }

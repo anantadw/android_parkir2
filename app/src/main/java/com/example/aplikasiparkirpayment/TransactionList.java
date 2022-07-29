@@ -55,6 +55,12 @@ public class TransactionList extends AppCompatActivity {
         getTransactionsData(parker_id, vehicle_id);
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
+    }
+
     private void getTransactionsData(int parker_id, int vehicle_id) {
         String token = Preferences.getToken(getBaseContext());
         if (token != null) {

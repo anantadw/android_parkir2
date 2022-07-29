@@ -10,7 +10,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/design_default_color_primary"
+        android:background="@color/dark_blue"
         android:minHeight="?attr/actionBarSize"
         android:foregroundTint="@color/white"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
@@ -25,6 +25,6 @@
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar"
         tools:listitem="@layout/list_item"
-        android:background="#CECECE"/>
+        android:background="#EDEDED"/>
 
 </RelativeLayout>

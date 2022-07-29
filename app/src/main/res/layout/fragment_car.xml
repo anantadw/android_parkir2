@@ -2,7 +2,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center_vertical">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivCar"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:srcCompat="@drawable/ic_baseline_directions_car_24"
+        android:layout_marginBottom="30dp"
+        android:layout_centerHorizontal="true"
+        android:tint="@color/black"/>
 
     <TextView
         android:id="@+id/tvCar"
@@ -12,18 +22,20 @@
         android:textColor="@color/black"
         android:textSize="32sp"
         android:textStyle="bold"
-        android:layout_marginBottom="20dp"
-        android:layout_centerHorizontal="true"/>
+        android:layout_marginBottom="30dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/ivCar"/>
 
     <Button
         android:id="@+id/btnCarIn"
         android:layout_width="150dp"
         android:layout_height="60dp"
         android:layout_below="@id/tvCar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
         android:text="Masuk"
         android:textSize="20sp"
-        android:layout_marginBottom="10dp"
-        android:layout_centerHorizontal="true"/>
+        android:backgroundTint="@color/green"/>
 
     <Button
         android:id="@+id/btnCarOut"
@@ -32,6 +44,7 @@
         android:layout_below="@id/btnCarIn"
         android:text="Keluar"
         android:textSize="20sp"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:backgroundTint="@color/red"/>
 
 </RelativeLayout>

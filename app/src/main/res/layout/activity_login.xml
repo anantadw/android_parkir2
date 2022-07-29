@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,16 +11,16 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="E-Parkir DISHUB"
+        android:text="E-Parkir DISHUB Kota Bandung"
         android:textAlignment="center"
         android:textSize="36sp"
-        android:textColor="@color/design_default_color_primary"
+        android:textColor="@color/dark_blue"
         android:textStyle="bold"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Silakan masuk untuk melanjutkan"
+        android:text="Silakan masuk ke akun"
         android:textSize="16sp"
         android:textAlignment="center"
         android:layout_marginTop="15dp"/>
@@ -29,9 +28,9 @@
     <EditText
         android:id="@+id/etMemberNumber"
         android:layout_width="200dp"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
         android:hint="Nomor anggota"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="60dp"
         android:inputType="numberSigned"
         android:maxLength="5"
         android:textSize="20sp"
@@ -44,7 +43,7 @@
     <EditText
         android:id="@+id/etPassword"
         android:layout_width="200dp"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
         android:hint="Kata sandi"
         android:layout_marginTop="20dp"
         android:inputType="textPassword"
@@ -62,8 +61,9 @@
         android:text="Masuk"
         android:textStyle="bold"
         android:textSize="18dp"
-        android:backgroundTint="@color/design_default_color_primary"
-        android:layout_marginTop="40dp"
+        android:textAllCaps="false"
+        android:backgroundTint="@color/dark_blue"
+        android:layout_marginTop="60dp"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:drawableLeft="@drawable/ic_baseline_login_24"

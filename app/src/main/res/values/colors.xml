@@ -9,4 +9,8 @@
     <color name="teal_800">#00695C</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="dark_blue">#004AAD</color>
+    <color name="darker_blue">#002E6C</color>
+    <color name="green">#16a34a</color>
+    <color name="red">#dc2626</color>
 </resources>

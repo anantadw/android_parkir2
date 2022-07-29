@@ -10,7 +10,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/design_default_color_primary"
+        android:background="@color/dark_blue"
         android:minHeight="?attr/actionBarSize"
         android:foregroundTint="@color/white"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
@@ -19,23 +19,21 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <TextView
-        android:id="@+id/tvVehicle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivVehicle"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_below="@id/toolbar"
-        android:layout_marginTop="100dp"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="@color/black"
+        android:layout_marginTop="80dp"
+        android:tint="@color/black"
         android:layout_centerHorizontal="true"/>
 
     <GridLayout
         android:id="@+id/gridLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvVehicle"
-        android:layout_marginTop="80dp"
+        android:layout_below="@id/ivVehicle"
+        android:layout_marginTop="60dp"
         android:columnCount="2"
         android:paddingLeft="30dp"
         android:paddingRight="30dp"
@@ -144,7 +142,7 @@
         android:layout_marginTop="40dp"
         android:layout_marginEnd="40dp"
         android:layout_marginBottom="40dp"
-        android:text="Bayar"
+        android:text="Pilih Pembayaran"
         android:textSize="24sp" />
 
 </RelativeLayout>

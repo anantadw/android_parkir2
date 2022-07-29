@@ -85,6 +85,12 @@ public class TransactionInActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
+    }
+
     private void sendRequest(int parker_id, int vehicle_id, String license_plate) {
         TransactionRequest transactionRequest = new TransactionRequest();
         transactionRequest.setParker_id(parker_id);
