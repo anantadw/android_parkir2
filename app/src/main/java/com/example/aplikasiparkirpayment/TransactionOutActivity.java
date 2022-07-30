@@ -13,7 +13,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -43,9 +42,9 @@ public class TransactionOutActivity extends AppCompatActivity {
     AppCompatImageView iv_vehicle;
     TextView tv_transaction_id, tv_license_plate, tv_date, tv_time_in, tv_cost;
     Button btn_done;
-    private int price;
     BluetoothAdapter bluetoothAdapter;
-    public static final int BLUETOOTH_REQ_CODE = 1;
+    public static final int BLUETOOTH_REQUEST_CODE = 1;
+    private int price;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +88,7 @@ public class TransactionOutActivity extends AppCompatActivity {
 
                 if (!bluetoothAdapter.isEnabled()) {
                     Intent bluetoothIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                    startActivityForResult(bluetoothIntent, BLUETOOTH_REQ_CODE);
+                    startActivityForResult(bluetoothIntent, BLUETOOTH_REQUEST_CODE);
                 } else {
                     finishTransaction(transaction_id);
                 }
@@ -249,7 +248,20 @@ public class TransactionOutActivity extends AppCompatActivity {
             EscPosPrinter printer = new EscPosPrinter(BluetoothPrintersConnections.selectFirstPaired(), 203, 58f, 32);
             printer.printFormattedText(
                     "[L]================================\n" +
-                    "[C]Struk Parkir\n" +
+                    "[C]<b>Struk E-Parkir</b>\n" +
+                    "[L]--------------------------------\n" +
+                    "[L]ID Transaksi[R]" + tv_transaction_id.getText().toString() + "\n" +
+                    "[L]Lokasi[R]test" + "\n" +
+                    "[L]Juru Parkir[R]test" + "\n" +
+                    "[L]--------------------------------\n" +
+                    "[L]Kendaraan[R]test" + "\n" +
+                    "[L]Plat Nomor[R]" + tv_license_plate.getText().toString() + "\n" +
+                    "[L]Tanggal[R]" + tv_date.getText().toString() + "\n" +
+                    "[L]Jam Masuk[R]" + tv_time_in.getText().toString() + "\n" +
+                    "[L]Tarif[R]" + tv_cost.getText().toString() + "\n" +
+                    "[L]Jam Pembayaran[R]test" + "\n" +
+                    "[L]--------------------------------\n" +
+                    "[C]<b>Terima kasih!</b>\n" +
                     "[L]================================\n"
             );
             printer.disconnectPrinter();
