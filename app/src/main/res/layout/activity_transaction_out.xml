@@ -21,10 +21,10 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/ivVehicle"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_below="@id/toolbar"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="40dp"
         android:tint="@color/black"
         android:layout_centerHorizontal="true"/>
 
@@ -33,7 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/ivVehicle"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="40dp"
         android:columnCount="2"
         android:paddingLeft="30dp"
         android:paddingRight="30dp"
@@ -113,14 +113,14 @@
         android:id="@+id/tvRate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Tarif"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="@color/black"
         android:layout_below="@id/gridLayout"
         android:layout_alignParentLeft="true"
+        android:layout_marginLeft="30dp"
         android:layout_marginTop="20dp"
-        android:layout_marginLeft="30dp"/>
+        android:text="Tarif"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tvCost"
@@ -133,16 +133,28 @@
         android:layout_marginTop="20dp"
         android:layout_marginRight="30dp"/>
 
-    <Button
-        android:id="@+id/btnDone"
+    <Spinner
+        android:id="@+id/spSelectPayment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvRate"
+        android:layout_below="@id/tvCost"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginBottom="30dp"
+        android:entries="@array/payment_method"
+        android:padding="15dp" />
+
+    <Button
+        android:id="@+id/btnPay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/spSelectPayment"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="40dp"
         android:layout_marginEnd="40dp"
         android:layout_marginBottom="40dp"
         android:text="Bayar"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        android:enabled="false"/>
 
 </RelativeLayout>

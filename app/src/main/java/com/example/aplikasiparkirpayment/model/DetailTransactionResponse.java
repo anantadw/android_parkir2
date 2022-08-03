@@ -3,7 +3,8 @@ package com.example.aplikasiparkirpayment.model;
 public class DetailTransactionResponse {
     private boolean status;
     private int id;
-    private int vehicle_id;
+    private String location;
+    private String vehicle_name;
     private int vehicle_price;
     private String license_plate;
     private int in_time;
@@ -25,12 +26,20 @@ public class DetailTransactionResponse {
         this.id = id;
     }
 
-    public int getVehicle_id() {
-        return vehicle_id;
+    public String getLocation() {
+        return location;
     }
 
-    public void setVehicle_id(int vehicle_id) {
-        this.vehicle_id = vehicle_id;
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getVehicle_name() {
+        return vehicle_name;
+    }
+
+    public void setVehicle_name(String vehicle_name) {
+        this.vehicle_name = vehicle_name;
     }
 
     public int getVehicle_price() {

@@ -14,7 +14,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +31,7 @@ import com.example.aplikasiparkirpayment.model.DetailTransactionResponse;
 import com.example.aplikasiparkirpayment.model.TransactionUpdate;
 import com.example.aplikasiparkirpayment.retrofit.ApiService;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -41,10 +44,12 @@ public class TransactionOutActivity extends AppCompatActivity {
     LoadingDialog loadingDialog;
     AppCompatImageView iv_vehicle;
     TextView tv_transaction_id, tv_license_plate, tv_date, tv_time_in, tv_cost;
-    Button btn_done;
+    Spinner sp_select_payment;
+    Button btn_pay;
     BluetoothAdapter bluetoothAdapter;
     public static final int BLUETOOTH_REQUEST_CODE = 1;
-    private int price;
+    private int price, payment_method;
+    private DetailTransactionResponse result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +64,8 @@ public class TransactionOutActivity extends AppCompatActivity {
         tv_date = findViewById(R.id.tvDate);
         tv_time_in = findViewById(R.id.tvTimeIn);
         tv_cost = findViewById(R.id.tvCost);
-        btn_done = findViewById(R.id.btnDone);
+        sp_select_payment = findViewById(R.id.spSelectPayment);
+        btn_pay = findViewById(R.id.btnPay);
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         Intent intentData = getIntent();
@@ -79,7 +85,24 @@ public class TransactionOutActivity extends AppCompatActivity {
         loadingDialog.startLoadingDialog();
         getDetailTransactionData(transaction_id);
 
-        btn_done.setOnClickListener(new View.OnClickListener() {
+        sp_select_payment.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                payment_method = sp_select_payment.getSelectedItemPosition();
+                if (payment_method == 0) {
+                    btn_pay.setEnabled(false);
+                } else {
+                    btn_pay.setEnabled(true);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        btn_pay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (bluetoothAdapter == null) {
@@ -121,16 +144,18 @@ public class TransactionOutActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<DetailTransactionResponse> call, Response<DetailTransactionResponse> response) {
                     if (response.isSuccessful()) {
-                        int in_time = response.body().getIn_time();
-                        int out_time = response.body().getOut_time();
+                        result = response.body();
+
+                        int in_time = result.getIn_time();
+                        int out_time = result.getOut_time();
                         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy");
                         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
                         Date date = new Date((long) in_time * 1000);
                         int hour_spent = (out_time - in_time) / 3600;
-                        price = (hour_spent + 1) * response.body().getVehicle_price();
+                        price = (hour_spent + 1) * result.getVehicle_price();
 
-                        tv_transaction_id.setText(String.valueOf(response.body().getId()));
-                        tv_license_plate.setText(response.body().getLicense_plate());
+                        tv_transaction_id.setText(String.valueOf(result.getId()));
+                        tv_license_plate.setText(result.getLicense_plate());
                         tv_date.setText(dateFormat.format(date));
                         tv_time_in.setText(timeFormat.format(date));
                         tv_cost.setText("Rp" + String.format("%,d", price));
@@ -245,21 +270,29 @@ public class TransactionOutActivity extends AppCompatActivity {
         } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S && ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH_SCAN}, TransactionOutActivity.PERMISSION_BLUETOOTH_SCAN);
         } else {
+            String parker_name = Preferences.getParkerName(getBaseContext());
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            SimpleDateFormat formatter_date = new SimpleDateFormat("dd MMMM yyyy");
+            SimpleDateFormat formatter_time = new SimpleDateFormat("HH:mm");
+            String payment = (payment_method == 1) ? "Tunai" : "QRIS";
+
             EscPosPrinter printer = new EscPosPrinter(BluetoothPrintersConnections.selectFirstPaired(), 203, 58f, 32);
             printer.printFormattedText(
                     "[L]================================\n" +
                     "[C]<b>Struk E-Parkir</b>\n" +
                     "[L]--------------------------------\n" +
                     "[L]ID Transaksi[R]" + tv_transaction_id.getText().toString() + "\n" +
-                    "[L]Lokasi[R]test" + "\n" +
-                    "[L]Juru Parkir[R]test" + "\n" +
+                    "[L]Lokasi[R]" + result.getLocation() + "\n" +
+                    "[L]Juru Parkir[R]" + parker_name + "\n" +
                     "[L]--------------------------------\n" +
-                    "[L]Kendaraan[R]test" + "\n" +
+                    "[L]Kendaraan[R]" + result.getVehicle_name() + "\n" +
                     "[L]Plat Nomor[R]" + tv_license_plate.getText().toString() + "\n" +
-                    "[L]Tanggal[R]" + tv_date.getText().toString() + "\n" +
-                    "[L]Jam Masuk[R]" + tv_time_in.getText().toString() + "\n" +
+                    "[L]Waktu Masuk[R]" + tv_date.getText().toString() + "\n" +
+                    "[R]" + tv_time_in.getText().toString() + "\n" +
+                    "[L]Waktu Bayar[R]" + formatter_date.format(timestamp) + "\n" +
+                    "[R]" + formatter_time.format(timestamp) + "\n" +
                     "[L]Tarif[R]" + tv_cost.getText().toString() + "\n" +
-                    "[L]Jam Pembayaran[R]test" + "\n" +
+                    "[L]Metode Bayar[R]" + payment + "\n" +
                     "[L]--------------------------------\n" +
                     "[C]<b>Terima kasih!</b>\n" +
                     "[L]================================\n"

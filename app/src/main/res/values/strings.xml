@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">AplikasiParkirPayment</string>
+    <string-array name="payment_method">
+        <item>-- Pilih Metode Pembayaran --</item>
+        <item>Tunai (Cash)</item>
+        <item>QRIS (Kode QR)</item>
+    </string-array>
 </resources>
