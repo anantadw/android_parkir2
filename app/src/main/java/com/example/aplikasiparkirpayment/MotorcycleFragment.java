@@ -14,6 +14,9 @@ import androidx.fragment.app.Fragment;
 public class MotorcycleFragment extends Fragment {
     Button btn_motorcycle_in, btn_motorcycle_out;
 
+    public static final String VEHICLE_TYPE = "Motor";
+    public static final int VEHICLE_ID = 2;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -22,27 +25,17 @@ public class MotorcycleFragment extends Fragment {
         btn_motorcycle_in = view.findViewById(R.id.btnMotorcycleIn);
         btn_motorcycle_out = view.findViewById(R.id.btnMotorcycleOut);
 
-        btn_motorcycle_in.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                nextPage(TransactionInActivity.class);
-            }
-        });
+        btn_motorcycle_in.setOnClickListener(v -> nextPage(TransactionInActivity.class));
 
-        btn_motorcycle_out.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                nextPage(TransactionList.class);
-            }
-        });
+        btn_motorcycle_out.setOnClickListener(v -> nextPage(TransactionList.class));
 
         return view;
     }
 
     private void nextPage(Class<?> nextClass) {
         Intent intent = new Intent(getActivity(), nextClass);
-        intent.putExtra("vehicle_type", "Motor");
-        intent.putExtra("vehicle_id", 2);
+        intent.putExtra("vehicle_type", VEHICLE_TYPE);
+        intent.putExtra("vehicle_id", VEHICLE_ID);
         startActivity(intent);
     }
 }

@@ -31,9 +31,7 @@ public class TransactionList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaction_list);
 
-        loadingDialog = new LoadingDialog(TransactionList.this);
-        toolbar = findViewById(R.id.toolbar);
-        recyclerView = findViewById(R.id.recyclerView);
+        setUpView();
 
         Intent intentData = getIntent();
         String vehicle_type = intentData.getStringExtra("vehicle_type");
@@ -46,6 +44,12 @@ public class TransactionList extends AppCompatActivity {
 
         loadingDialog.startLoadingDialog();
         getTransactionsData(parker_id, vehicle_id);
+    }
+
+    private void setUpView() {
+        loadingDialog = new LoadingDialog(TransactionList.this);
+        toolbar = findViewById(R.id.toolbar);
+        recyclerView = findViewById(R.id.recyclerView);
     }
 
     @Override
@@ -64,8 +68,8 @@ public class TransactionList extends AppCompatActivity {
     private void getTransactionsData(int parker_id, int vehicle_id) {
         String token = Preferences.getToken(getBaseContext());
         if (token != null) {
-            Call<TransactionResponse> transactionResponseCall = ApiService.endpoint().getTransactions("Bearer " + token, parker_id, vehicle_id);
-            transactionResponseCall.enqueue(new Callback<TransactionResponse>() {
+            Call<TransactionResponse> getTransactionsCall = ApiService.endpoint().getTransactions("Bearer " + token, parker_id, vehicle_id);
+            getTransactionsCall.enqueue(new Callback<TransactionResponse>() {
                 @Override
                 public void onResponse(Call<TransactionResponse> call, Response<TransactionResponse> response) {
                     if (response.isSuccessful()) {
@@ -92,6 +96,8 @@ public class TransactionList extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Error: " + t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                 }
             });
+        } else {
+            Toast.makeText(getApplicationContext(), "Error: Anda tidak punya akses (Token/ID null).", Toast.LENGTH_LONG).show();
         }
     }
 }

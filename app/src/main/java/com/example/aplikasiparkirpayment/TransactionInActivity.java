@@ -9,7 +9,6 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -34,12 +33,7 @@ public class TransactionInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaction_in);
 
-        loadingDialog = new LoadingDialog(TransactionInActivity.this);
-        toolbar = findViewById(R.id.toolbar);
-        et_region_code = findViewById(R.id.etRegionCode);
-        et_police_number = findViewById(R.id.etPoliceNumber);
-        et_last_code = findViewById(R.id.etLastCode);
-        btn_start = findViewById(R.id.btnStart);
+        setUpView();
 
         Intent intentData = getIntent();
         String vehicle_type = intentData.getStringExtra("vehicle_type");
@@ -49,6 +43,8 @@ public class TransactionInActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         if (vehicle_type != null) {
             getSupportActionBar().setTitle("Transaksi Masuk | " + vehicle_type);
+        } else {
+            getSupportActionBar().setTitle("Transaksi Masuk | null");
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -71,18 +67,24 @@ public class TransactionInActivity extends AppCompatActivity {
             }
         });
 
-        btn_start.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (TextUtils.isEmpty(et_region_code.getText().toString()) || TextUtils.isEmpty(et_police_number.getText().toString()) || TextUtils.isEmpty(et_last_code.getText().toString())) {
-                    Toast.makeText(getApplicationContext(), "Mohon lengkapi plat nomor.", Toast.LENGTH_LONG).show();
-                } else {
-                    String license_plate = et_region_code.getText().toString().toUpperCase() + et_police_number.getText().toString() + et_last_code.getText().toString().toUpperCase();
-                    loadingDialog.startLoadingDialog();
-                    sendRequest(parker_id, vehicle_id, license_plate);
-                }
+        btn_start.setOnClickListener(v -> {
+            if (TextUtils.isEmpty(et_region_code.getText().toString()) || TextUtils.isEmpty(et_police_number.getText().toString()) || TextUtils.isEmpty(et_last_code.getText().toString())) {
+                Toast.makeText(getApplicationContext(), "Mohon lengkapi plat nomor.", Toast.LENGTH_LONG).show();
+            } else {
+                String license_plate = et_region_code.getText().toString().toUpperCase() + et_police_number.getText().toString() + et_last_code.getText().toString().toUpperCase();
+                loadingDialog.startLoadingDialog();
+                sendRequest(parker_id, vehicle_id, license_plate);
             }
         });
+    }
+
+    private void setUpView() {
+        loadingDialog = new LoadingDialog(TransactionInActivity.this);
+        toolbar = findViewById(R.id.toolbar);
+        et_region_code = findViewById(R.id.etRegionCode);
+        et_police_number = findViewById(R.id.etPoliceNumber);
+        et_last_code = findViewById(R.id.etLastCode);
+        btn_start = findViewById(R.id.btnStart);
     }
 
     @Override
@@ -93,25 +95,22 @@ public class TransactionInActivity extends AppCompatActivity {
 
     private void sendRequest(int parker_id, int vehicle_id, String license_plate) {
         TransactionRequest transactionRequest = new TransactionRequest();
-        transactionRequest.setParker_id(parker_id);
-        transactionRequest.setVehicle_id(vehicle_id);
-        transactionRequest.setLicense_plate(license_plate);
+        transactionRequest.setParkerId(parker_id);
+        transactionRequest.setVehicleId(vehicle_id);
+        transactionRequest.setLicensePlate(license_plate);
 
         String token = Preferences.getToken(getBaseContext());
         if (token != null) {
-            Call<DefaultResponse> defaultResponseCall = ApiService.endpoint().createTransaction("Bearer " + token, transactionRequest);
-            defaultResponseCall.enqueue(new Callback<DefaultResponse>() {
+            Call<DefaultResponse> createTransactionCall = ApiService.endpoint().createTransaction("Bearer " + token, transactionRequest);
+            createTransactionCall.enqueue(new Callback<DefaultResponse>() {
                 @Override
                 public void onResponse(Call<DefaultResponse> call, Response<DefaultResponse> response) {
                     if (response.isSuccessful()) {
                         Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
 
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                loadingDialog.dismissDialog();
-                                finish();
-                            }
+                        new Handler().postDelayed(() -> {
+                            loadingDialog.dismissDialog();
+                            finish();
                         }, 700);
                     } else {
                         loadingDialog.dismissDialog();
@@ -126,6 +125,8 @@ public class TransactionInActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Error: " + t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                 }
             });
+        } else {
+            Toast.makeText(getApplicationContext(), "Error: Anda tidak punya akses (Token/ID null).", Toast.LENGTH_LONG).show();
         }
     }
 }

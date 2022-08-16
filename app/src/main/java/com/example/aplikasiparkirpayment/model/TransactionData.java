@@ -12,11 +12,11 @@ public class TransactionData {
         this.id = id;
     }
 
-    public String getLicense_plate() {
+    public String getLicensePlate() {
         return license_plate;
     }
 
-    public void setLicense_plate(String license_plate) {
+    public void setLicensePlate(String license_plate) {
         this.license_plate = license_plate;
     }
 }

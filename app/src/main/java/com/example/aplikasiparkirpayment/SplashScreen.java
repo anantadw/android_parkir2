@@ -13,19 +13,16 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_screen);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // Check if user has token (logged in)
-                String token = Preferences.getToken(getBaseContext());
-                if (token != null) {
-                    Intent intent = new Intent(getBaseContext(), HomeActivity.class);
-                    nextPage(intent);
-                } else {
-                    Intent intent = new Intent(getBaseContext(), LoginActivity.class);
-                    nextPage(intent);
-                }
+        new Handler().postDelayed(() -> {
+            // Check if user has token (logged in)
+            String token = Preferences.getToken(getBaseContext());
+            Intent intent;
+            if (token != null) {
+                intent = new Intent(getBaseContext(), HomeActivity.class);
+            } else {
+                intent = new Intent(getBaseContext(), LoginActivity.class);
             }
+            nextPage(intent);
         }, 2000);
     }
 

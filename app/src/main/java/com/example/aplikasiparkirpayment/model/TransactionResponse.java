@@ -6,7 +6,7 @@ public class TransactionResponse {
     private boolean status;
     private List<TransactionData> data;
 
-    public boolean isStatus() {
+    public boolean getStatus() {
         return status;
     }
 

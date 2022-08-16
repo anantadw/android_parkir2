@@ -4,11 +4,11 @@ public class LoginRequest {
     private String member_number;
     private String password;
 
-    public String getMember_number() {
+    public String getMemberNumber() {
         return member_number;
     }
 
-    public void setMember_number(String member_number) {
+    public void setMemberNumber(String member_number) {
         this.member_number = member_number;
     }
 

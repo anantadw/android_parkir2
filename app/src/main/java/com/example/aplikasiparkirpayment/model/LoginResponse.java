@@ -7,7 +7,7 @@ public class LoginResponse {
     private String parker_name;
     private String token;
 
-    public boolean isStatus() {
+    public boolean getStatus() {
         return status;
     }
 
@@ -23,19 +23,19 @@ public class LoginResponse {
         this.message = message;
     }
 
-    public int getParker_id() {
+    public int getParkerId() {
         return parker_id;
     }
 
-    public void setParker_id(int parker_id) {
+    public void setParkerId(int parker_id) {
         this.parker_id = parker_id;
     }
 
-    public String getParker_name() {
+    public String getParkerName() {
         return parker_name;
     }
 
-    public void setParker_name(String parker_name) {
+    public void setParkerName(String parker_name) {
         this.parker_name = parker_name;
     }
 

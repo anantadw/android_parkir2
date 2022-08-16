@@ -4,7 +4,7 @@ public class DefaultResponse {
     private boolean status;
     private String message;
 
-    public boolean isStatus() {
+    public boolean getStatus() {
         return status;
     }
 

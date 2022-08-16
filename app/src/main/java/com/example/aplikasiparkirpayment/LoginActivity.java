@@ -33,10 +33,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        loadingDialog = new LoadingDialog(LoginActivity.this);
-        et_member_number = findViewById(R.id.etMemberNumber);
-        et_password = findViewById(R.id.etPassword);
-        btn_login = findViewById(R.id.btnLogin);
+        setUpView();
 
         et_member_number.addTextChangedListener(new TextWatcher() {
             @Override
@@ -57,45 +54,46 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        btn_login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (TextUtils.isEmpty(et_member_number.getText().toString()) || TextUtils.isEmpty(et_password.getText().toString())) {
-                    Toast.makeText(getApplicationContext(), "Nomor anggota / kata sandi harus diisi.", Toast.LENGTH_SHORT).show();
-                } else {
-                    loadingDialog.startLoadingDialog();
-                    login();
-                }
+        btn_login.setOnClickListener(v -> {
+            if (TextUtils.isEmpty(et_member_number.getText().toString()) || TextUtils.isEmpty(et_password.getText().toString())) {
+                Toast.makeText(getApplicationContext(), "Nomor anggota / kata sandi harus diisi.", Toast.LENGTH_SHORT).show();
+            } else {
+                loadingDialog.startLoadingDialog();
+                login();
             }
         });
     }
 
+    private void setUpView() {
+        loadingDialog = new LoadingDialog(LoginActivity.this);
+        et_member_number = findViewById(R.id.etMemberNumber);
+        et_password = findViewById(R.id.etPassword);
+        btn_login = findViewById(R.id.btnLogin);
+    }
+
     private void login() {
         LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setMember_number(et_member_number.getText().toString());
+        loginRequest.setMemberNumber(et_member_number.getText().toString());
         loginRequest.setPassword(et_password.getText().toString());
 
-        Call<LoginResponse> loginResponseCall = ApiService.endpoint().parkerLogin(loginRequest);
-        loginResponseCall.enqueue(new Callback<LoginResponse>() {
+        Call<LoginResponse> loginCall = ApiService.endpoint().parkerLogin(loginRequest);
+        loginCall.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_LONG).show();
 
                     // Set data to preferences
-                    Preferences.setParkerId(getBaseContext(), response.body().getParker_id());
-                    Preferences.setParkerName(getBaseContext(), response.body().getParker_name());
+                    Preferences.setParkerId(getBaseContext(), response.body().getParkerId());
+                    Preferences.setParkerName(getBaseContext(), response.body().getParkerName());
                     Preferences.setToken(getBaseContext(), response.body().getToken());
 
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            loadingDialog.dismissDialog();
-                            startActivity(intent);
-                            finish();
-                        }
+                    new Handler().postDelayed(() -> {
+                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        loadingDialog.dismissDialog();
+                        startActivity(intent);
+                        finish();
                     }, 700);
                 } else {
                     loadingDialog.dismissDialog();

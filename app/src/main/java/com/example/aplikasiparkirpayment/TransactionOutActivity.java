@@ -47,6 +47,7 @@ public class TransactionOutActivity extends AppCompatActivity {
     Spinner sp_select_payment;
     Button btn_pay;
     BluetoothAdapter bluetoothAdapter;
+
     public static final int BLUETOOTH_REQUEST_CODE = 1;
     private int price, payment_method;
     private DetailTransactionResponse result;
@@ -56,17 +57,7 @@ public class TransactionOutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaction_out);
 
-        loadingDialog = new LoadingDialog(TransactionOutActivity.this);
-        toolbar = findViewById(R.id.toolbar);
-        iv_vehicle = findViewById(R.id.ivVehicle);
-        tv_transaction_id = findViewById(R.id.tvTransactionId);
-        tv_license_plate = findViewById(R.id.tvLicensePlate);
-        tv_date = findViewById(R.id.tvDate);
-        tv_time_in = findViewById(R.id.tvTimeIn);
-        tv_cost = findViewById(R.id.tvCost);
-        sp_select_payment = findViewById(R.id.spSelectPayment);
-        btn_pay = findViewById(R.id.btnPay);
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        setUpView();
 
         Intent intentData = getIntent();
         int transaction_id = intentData.getIntExtra("transaction_id", 0);
@@ -102,21 +93,32 @@ public class TransactionOutActivity extends AppCompatActivity {
             }
         });
 
-        btn_pay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (bluetoothAdapter == null) {
-                    Toast.makeText(getApplicationContext(), "Perangkat tidak mendukung Bluetooth.", Toast.LENGTH_SHORT).show();
-                }
+        btn_pay.setOnClickListener(v -> {
+            if (bluetoothAdapter == null) {
+                Toast.makeText(getApplicationContext(), "Perangkat tidak mendukung Bluetooth.", Toast.LENGTH_SHORT).show();
+            }
 
-                if (!bluetoothAdapter.isEnabled()) {
-                    Intent bluetoothIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                    startActivityForResult(bluetoothIntent, BLUETOOTH_REQUEST_CODE);
-                } else {
-                    finishTransaction(transaction_id);
-                }
+            if (!bluetoothAdapter.isEnabled()) {
+                Intent bluetoothIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(bluetoothIntent, BLUETOOTH_REQUEST_CODE);
+            } else {
+                finishTransaction(transaction_id);
             }
         });
+    }
+
+    private void setUpView() {
+        loadingDialog = new LoadingDialog(TransactionOutActivity.this);
+        toolbar = findViewById(R.id.toolbar);
+        iv_vehicle = findViewById(R.id.ivVehicle);
+        tv_transaction_id = findViewById(R.id.tvTransactionId);
+        tv_license_plate = findViewById(R.id.tvLicensePlate);
+        tv_date = findViewById(R.id.tvDate);
+        tv_time_in = findViewById(R.id.tvTimeIn);
+        tv_cost = findViewById(R.id.tvCost);
+        sp_select_payment = findViewById(R.id.spSelectPayment);
+        btn_pay = findViewById(R.id.btnPay);
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     }
 
     @Override
@@ -130,32 +132,32 @@ public class TransactionOutActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
-            Toast.makeText(getApplicationContext(), "Bluetooth dinyalakan.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Bluetooth diaktifkan.", Toast.LENGTH_SHORT).show();
         } else if (resultCode == RESULT_CANCELED) {
-            Toast.makeText(getApplicationContext(), "Bluetooth perlu dinyalakan untuk mencetak struk.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Bluetooth perlu diaktifkan untuk mencetak struk.", Toast.LENGTH_LONG).show();
         }
     }
 
     private void getDetailTransactionData(int transaction_id) {
         String token = Preferences.getToken(getBaseContext());
         if (token != null) {
-            Call<DetailTransactionResponse> call = ApiService.endpoint().getDetailTransaction("Bearer " + token, transaction_id);
-            call.enqueue(new Callback<DetailTransactionResponse>() {
+            Call<DetailTransactionResponse> getDetailCall = ApiService.endpoint().getDetailTransaction("Bearer " + token, transaction_id);
+            getDetailCall.enqueue(new Callback<DetailTransactionResponse>() {
                 @Override
                 public void onResponse(Call<DetailTransactionResponse> call, Response<DetailTransactionResponse> response) {
                     if (response.isSuccessful()) {
                         result = response.body();
 
-                        int in_time = result.getIn_time();
-                        int out_time = result.getOut_time();
+                        int in_time = result.getInTime();
+                        int out_time = result.getOutTime();
                         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy");
                         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
                         Date date = new Date((long) in_time * 1000);
                         int hour_spent = (out_time - in_time) / 3600;
-                        price = (hour_spent + 1) * result.getVehicle_price();
+                        price = (hour_spent + 1) * result.getVehiclePrice();
 
                         tv_transaction_id.setText(String.valueOf(result.getId()));
-                        tv_license_plate.setText(result.getLicense_plate());
+                        tv_license_plate.setText(result.getLicensePlate());
                         tv_date.setText(dateFormat.format(date));
                         tv_time_in.setText(timeFormat.format(date));
                         tv_cost.setText("Rp" + String.format("%,d", price));
@@ -174,17 +176,19 @@ public class TransactionOutActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Error: " + t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                 }
             });
+        } else {
+            Toast.makeText(getApplicationContext(), "Error: Anda tidak punya akses (Token/ID null).", Toast.LENGTH_LONG).show();
         }
     }
 
     private void finishTransaction(int transaction_id) {
         TransactionUpdate transactionUpdate = new TransactionUpdate();
-        transactionUpdate.setTotal_price(price);
+        transactionUpdate.setTotalPrice(price);
 
         String token = Preferences.getToken(getBaseContext());
         if (token != null) {
-            Call<DefaultResponse> call = ApiService.endpoint().updateTransactionStatus("Bearer " + token, transaction_id, transactionUpdate);
-            call.enqueue(new Callback<DefaultResponse>() {
+            Call<DefaultResponse> payCall = ApiService.endpoint().updateTransactionStatus("Bearer " + token, transaction_id, transactionUpdate);
+            payCall.enqueue(new Callback<DefaultResponse>() {
                 @Override
                 public void onResponse(Call<DefaultResponse> call, Response<DefaultResponse> response) {
                     if (response.isSuccessful()) {
@@ -222,6 +226,8 @@ public class TransactionOutActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Error: " + t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                 }
             });
+        } else {
+            Toast.makeText(getApplicationContext(), "Error: Anda tidak punya akses (Token/ID null).", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -285,7 +291,7 @@ public class TransactionOutActivity extends AppCompatActivity {
                     "[L]Lokasi[R]" + result.getLocation() + "\n" +
                     "[L]Juru Parkir[R]" + parker_name + "\n" +
                     "[L]--------------------------------\n" +
-                    "[L]Kendaraan[R]" + result.getVehicle_name() + "\n" +
+                    "[L]Kendaraan[R]" + result.getVehicleName() + "\n" +
                     "[L]Plat Nomor[R]" + tv_license_plate.getText().toString() + "\n" +
                     "[L]Waktu Masuk[R]" + tv_date.getText().toString() + "\n" +
                     "[R]" + tv_time_in.getText().toString() + "\n" +

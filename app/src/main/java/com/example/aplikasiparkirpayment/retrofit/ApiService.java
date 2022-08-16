@@ -6,7 +6,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiService {
-    private static String BASE_URL = "http://192.168.100.4/laravel-applications/backend-parkir/public/api/";
+    private static final String BASE_URL = "http://192.168.100.4/laravel-applications/backend-parkir/public/api/";
 
     public static Retrofit getRetrofit() {
         HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();

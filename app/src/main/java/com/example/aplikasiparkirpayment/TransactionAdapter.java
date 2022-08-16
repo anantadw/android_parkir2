@@ -33,7 +33,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     public void onBindViewHolder(@NonNull TransactionAdapter.ViewHolder holder, int position) {
         TransactionData transaction = transactionLists.get(position);
 
-        holder.tv_license_plate.setText(transaction.getLicense_plate());
+        holder.tv_license_plate.setText(transaction.getLicensePlate());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

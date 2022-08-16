@@ -14,6 +14,9 @@ import androidx.fragment.app.Fragment;
 public class CarFragment extends Fragment {
     Button btn_car_in, btn_car_out;
 
+    public static final String VEHICLE_TYPE = "Mobil";
+    public static final int VEHICLE_ID = 1;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -22,27 +25,17 @@ public class CarFragment extends Fragment {
         btn_car_in = view.findViewById(R.id.btnCarIn);
         btn_car_out = view.findViewById(R.id.btnCarOut);
 
-        btn_car_in.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                nextPage(TransactionInActivity.class);
-            }
-        });
+        btn_car_in.setOnClickListener(v -> nextPage(TransactionInActivity.class));
 
-        btn_car_out.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                nextPage(TransactionList.class);
-            }
-        });
+        btn_car_out.setOnClickListener(v -> nextPage(TransactionList.class));
 
         return view;
     }
 
     private void nextPage(Class<?> nextClass) {
         Intent intent = new Intent(getActivity(), nextClass);
-        intent.putExtra("vehicle_type", "Mobil");
-        intent.putExtra("vehicle_id", 1);
+        intent.putExtra("vehicle_type", VEHICLE_TYPE);
+        intent.putExtra("vehicle_id", VEHICLE_ID);
         startActivity(intent);
     }
 

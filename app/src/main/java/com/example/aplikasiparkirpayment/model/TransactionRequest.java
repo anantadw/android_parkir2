@@ -5,27 +5,27 @@ public class TransactionRequest {
     private int vehicle_id;
     private String license_plate;
 
-    public int getParker_id() {
+    public int getParkerId() {
         return parker_id;
     }
 
-    public void setParker_id(int parker_id) {
+    public void setParkerId(int parker_id) {
         this.parker_id = parker_id;
     }
 
-    public int getVehicle_id() {
+    public int getVehicleId() {
         return vehicle_id;
     }
 
-    public void setVehicle_id(int vehicle_id) {
+    public void setVehicleId(int vehicle_id) {
         this.vehicle_id = vehicle_id;
     }
 
-    public String getLicense_plate() {
+    public String getLicensePlate() {
         return license_plate;
     }
 
-    public void setLicense_plate(String license_plate) {
+    public void setLicensePlate(String license_plate) {
         this.license_plate = license_plate;
     }
 }
