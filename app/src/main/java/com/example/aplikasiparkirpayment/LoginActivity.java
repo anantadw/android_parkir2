@@ -8,16 +8,15 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.aplikasiparkirpayment.helper.ErrorUtils;
 import com.example.aplikasiparkirpayment.model.DefaultResponse;
 import com.example.aplikasiparkirpayment.model.LoginRequest;
 import com.example.aplikasiparkirpayment.model.LoginResponse;
 import com.example.aplikasiparkirpayment.retrofit.ApiService;
+import com.shashank.sony.fancytoastlib.FancyToast;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -56,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
 
         btn_login.setOnClickListener(v -> {
             if (TextUtils.isEmpty(et_member_number.getText().toString()) || TextUtils.isEmpty(et_password.getText().toString())) {
-                Toast.makeText(getApplicationContext(), "Nomor anggota / kata sandi harus diisi.", Toast.LENGTH_SHORT).show();
+                FancyToast.makeText(getApplicationContext(), "Nomor anggota / kata sandi harus diisi.", FancyToast.LENGTH_LONG, FancyToast.DEFAULT, false).show();
             } else {
                 loadingDialog.startLoadingDialog();
                 login();
@@ -81,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_LONG).show();
+                    FancyToast.makeText(getApplicationContext(), response.body().getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS, false).show();
 
                     // Set data to preferences
                     Preferences.setParkerId(getBaseContext(), response.body().getParkerId());
@@ -98,14 +97,14 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     loadingDialog.dismissDialog();
                     DefaultResponse errorResponse = ErrorUtils.parseError(response);
-                    Toast.makeText(getApplicationContext(), errorResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    FancyToast.makeText(getApplicationContext(), errorResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.DEFAULT, false).show();
                 }
             }
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
                 loadingDialog.dismissDialog();
-                Toast.makeText(getApplicationContext(), "Error: " + t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                FancyToast.makeText(getApplicationContext(), "Error: " + t.getLocalizedMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
             }
         });
     }

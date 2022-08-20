@@ -18,7 +18,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dantsu.escposprinter.EscPosPrinter;
 import com.dantsu.escposprinter.connection.bluetooth.BluetoothPrintersConnections;
@@ -30,6 +29,7 @@ import com.example.aplikasiparkirpayment.model.DefaultResponse;
 import com.example.aplikasiparkirpayment.model.DetailTransactionResponse;
 import com.example.aplikasiparkirpayment.model.TransactionUpdate;
 import com.example.aplikasiparkirpayment.retrofit.ApiService;
+import com.shashank.sony.fancytoastlib.FancyToast;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -95,7 +95,7 @@ public class TransactionOutActivity extends AppCompatActivity {
 
         btn_pay.setOnClickListener(v -> {
             if (bluetoothAdapter == null) {
-                Toast.makeText(getApplicationContext(), "Perangkat tidak mendukung Bluetooth.", Toast.LENGTH_SHORT).show();
+                FancyToast.makeText(getApplicationContext(), "Perangkat tidak mendukung Bluetooth.", FancyToast.LENGTH_LONG, FancyToast.WARNING, false).show();
             }
 
             if (!bluetoothAdapter.isEnabled()) {
@@ -132,9 +132,9 @@ public class TransactionOutActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
-            Toast.makeText(getApplicationContext(), "Bluetooth diaktifkan.", Toast.LENGTH_SHORT).show();
+            FancyToast.makeText(getApplicationContext(), "Bluetooth diaktifkan.", FancyToast.LENGTH_LONG, FancyToast.DEFAULT, false).show();
         } else if (resultCode == RESULT_CANCELED) {
-            Toast.makeText(getApplicationContext(), "Bluetooth perlu diaktifkan untuk mencetak struk.", Toast.LENGTH_LONG).show();
+            FancyToast.makeText(getApplicationContext(), "Bluetooth perlu diaktifkan untuk mencetak struk.", FancyToast.LENGTH_LONG, FancyToast.DEFAULT, false).show();
         }
     }
 
@@ -165,7 +165,7 @@ public class TransactionOutActivity extends AppCompatActivity {
                     } else {
                         if (response.code() == 404) {
                             loadingDialog.dismissDialog();
-                            Toast.makeText(getApplicationContext(), "Gagal. Data tidak ditemukan.", Toast.LENGTH_LONG).show();
+                            FancyToast.makeText(getApplicationContext(), "Gagal. Data tidak ditemukan.", FancyToast.LENGTH_LONG, FancyToast.DEFAULT, false).show();
                         }
                     }
                 }
@@ -173,11 +173,11 @@ public class TransactionOutActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<DetailTransactionResponse> call, Throwable t) {
                     loadingDialog.dismissDialog();
-                    Toast.makeText(getApplicationContext(), "Error: " + t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                    FancyToast.makeText(getApplicationContext(), "Error: " + t.getLocalizedMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
                 }
             });
         } else {
-            Toast.makeText(getApplicationContext(), "Error: Anda tidak punya akses (Token/ID null).", Toast.LENGTH_LONG).show();
+            FancyToast.makeText(getApplicationContext(), "Error: Anda tidak punya akses (Token/ID null).", FancyToast.LENGTH_LONG, FancyToast.DEFAULT, false).show();
         }
     }
 
@@ -193,29 +193,29 @@ public class TransactionOutActivity extends AppCompatActivity {
                 public void onResponse(Call<DefaultResponse> call, Response<DefaultResponse> response) {
                     if (response.isSuccessful()) {
                         loadingDialog.dismissDialog();
-                        Toast.makeText(getApplicationContext(), "Transaksi berhasil. Mencetak struk.", Toast.LENGTH_LONG).show();
+                        FancyToast.makeText(getApplicationContext(), "Transaksi berhasil. Mencetak struk.", FancyToast.LENGTH_LONG, FancyToast.SUCCESS, false).show();
 
                         try {
                             printBill();
                         } catch (EscPosConnectionException e) {
                             e.printStackTrace();
-                            Toast.makeText(getApplicationContext(), "Error: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                            FancyToast.makeText(getApplicationContext(), "Error: " + e.getLocalizedMessage(), FancyToast.LENGTH_LONG, FancyToast.WARNING, false).show();
                         } catch (EscPosParserException e) {
                             e.printStackTrace();
-                            Toast.makeText(getApplicationContext(), "Error: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                            FancyToast.makeText(getApplicationContext(), "Error: " + e.getLocalizedMessage(), FancyToast.LENGTH_LONG, FancyToast.WARNING, false).show();
                         } catch (EscPosEncodingException e) {
                             e.printStackTrace();
-                            Toast.makeText(getApplicationContext(), "Error: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                            FancyToast.makeText(getApplicationContext(), "Error: " + e.getLocalizedMessage(), FancyToast.LENGTH_LONG, FancyToast.WARNING, false).show();
                         } catch (EscPosBarcodeException e) {
                             e.printStackTrace();
-                            Toast.makeText(getApplicationContext(), "Error: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                            FancyToast.makeText(getApplicationContext(), "Error: " + e.getLocalizedMessage(), FancyToast.LENGTH_LONG, FancyToast.WARNING, false).show();
                         }
 
                         finish();
                     } else {
                         if (response.code() == 400) {
                             loadingDialog.dismissDialog();
-                            Toast.makeText(getApplicationContext(), "Transaksi gagal.", Toast.LENGTH_LONG).show();
+                            FancyToast.makeText(getApplicationContext(), "Transaksi gagal.", FancyToast.LENGTH_LONG, FancyToast.DEFAULT, false).show();
                         }
                     }
                 }
@@ -223,11 +223,11 @@ public class TransactionOutActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<DefaultResponse> call, Throwable t) {
                     loadingDialog.dismissDialog();
-                    Toast.makeText(getApplicationContext(), "Error: " + t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                    FancyToast.makeText(getApplicationContext(), "Error: " + t.getLocalizedMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
                 }
             });
         } else {
-            Toast.makeText(getApplicationContext(), "Error: Anda tidak punya akses (Token/ID null).", Toast.LENGTH_LONG).show();
+            FancyToast.makeText(getApplicationContext(), "Error: Anda tidak punya akses (Token/ID null).", FancyToast.LENGTH_LONG, FancyToast.DEFAULT, false).show();
         }
     }
 
@@ -251,16 +251,16 @@ public class TransactionOutActivity extends AppCompatActivity {
                         printBill();
                     } catch (EscPosConnectionException e) {
                         e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), "Error: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                        FancyToast.makeText(getApplicationContext(), "Error: " + e.getLocalizedMessage(), FancyToast.LENGTH_LONG, FancyToast.WARNING, false).show();
                     } catch (EscPosParserException e) {
                         e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), "Error: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                        FancyToast.makeText(getApplicationContext(), "Error: " + e.getLocalizedMessage(), FancyToast.LENGTH_LONG, FancyToast.WARNING, false).show();
                     } catch (EscPosEncodingException e) {
                         e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), "Error: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                        FancyToast.makeText(getApplicationContext(), "Error: " + e.getLocalizedMessage(), FancyToast.LENGTH_LONG, FancyToast.WARNING, false).show();
                     } catch (EscPosBarcodeException e) {
                         e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), "Error: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                        FancyToast.makeText(getApplicationContext(), "Error: " + e.getLocalizedMessage(), FancyToast.LENGTH_LONG, FancyToast.WARNING, false).show();
                     }
             }
         }

@@ -7,11 +7,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.example.aplikasiparkirpayment.model.TransactionData;
 import com.example.aplikasiparkirpayment.model.TransactionResponse;
 import com.example.aplikasiparkirpayment.retrofit.ApiService;
+import com.shashank.sony.fancytoastlib.FancyToast;
 
 import java.util.List;
 
@@ -93,11 +93,11 @@ public class TransactionList extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<TransactionResponse> call, Throwable t) {
                     loadingDialog.dismissDialog();
-                    Toast.makeText(getApplicationContext(), "Error: " + t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                    FancyToast.makeText(getApplicationContext(), "Error: " + t.getLocalizedMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
                 }
             });
         } else {
-            Toast.makeText(getApplicationContext(), "Error: Anda tidak punya akses (Token/ID null).", Toast.LENGTH_LONG).show();
+            FancyToast.makeText(getApplicationContext(), "Error: Anda tidak punya akses (Token/ID null).", FancyToast.LENGTH_LONG, FancyToast.DEFAULT, false).show();
         }
     }
 }

@@ -12,12 +12,12 @@ import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.example.aplikasiparkirpayment.helper.ErrorUtils;
 import com.example.aplikasiparkirpayment.model.DefaultResponse;
 import com.example.aplikasiparkirpayment.retrofit.ApiService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.shashank.sony.fancytoastlib.FancyToast;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -100,7 +100,7 @@ public class HomeActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<DefaultResponse> call, Response<DefaultResponse> response) {
                     if (response.isSuccessful()) {
-                        Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_LONG).show();
+                        FancyToast.makeText(getApplicationContext(), response.body().getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS, false).show();
 
                         // Clear logged in parker data
                         Preferences.clearLoggedInUser(getBaseContext());
@@ -115,18 +115,18 @@ public class HomeActivity extends AppCompatActivity {
                     } else {
                         loadingDialog.dismissDialog();
                         DefaultResponse errorResponse = ErrorUtils.parseError(response);
-                        Toast.makeText(getApplicationContext(), errorResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        FancyToast.makeText(getApplicationContext(), errorResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.DEFAULT, false).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<DefaultResponse> call, Throwable t) {
                     loadingDialog.dismissDialog();
-                    Toast.makeText(getApplicationContext(), "Error: " + t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                    FancyToast.makeText(getApplicationContext(), "Error: " + t.getLocalizedMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
                 }
             });
         } else {
-            Toast.makeText(getApplicationContext(), "Error: Anda tidak punya akses (Token/ID null).", Toast.LENGTH_LONG).show();
+            FancyToast.makeText(getApplicationContext(), "Error: Anda tidak punya akses (Token/ID null).", FancyToast.LENGTH_LONG, FancyToast.DEFAULT, false).show();
         }
     }
 
